@@ -1,13 +1,7 @@
 package com.luizconde.usuario.infrastructure.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,6 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "usuarios")
 public class Usuario implements UserDetails {
 
@@ -27,14 +22,9 @@ public class Usuario implements UserDetails {
     private Long id;
 
     @Column(name = "nome", nullable = false, length = 100)
-    @NotBlank(message = "O nome e obrigatorio")
-    @Size(max = 100, message = "Maximo de 100 caracteres")
     private String nome;
 
     @Column(name = "email", length = 100, nullable = false)
-    @NotBlank(message = "O email e obrigatorio")
-    @Size(max = 100, message = "Maximo de 100 caracteres")
-    @Email(message = "Informe um email valido")
     private String email;
 
     @Column(name = "senha")

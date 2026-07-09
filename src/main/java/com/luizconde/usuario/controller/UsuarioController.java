@@ -28,7 +28,8 @@ public class UsuarioController {
     @PostMapping("/login")
     public String login(@RequestBody UsuarioDTO usuarioDTO){
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(usuarioDTO.getEmail(),
+                new UsernamePasswordAuthenticationToken(
+                        usuarioDTO.getEmail(),
                         usuarioDTO.getSenha())
         );
         return "Bearer " + jwtUtil.generateToken(authentication.getName());
@@ -43,5 +44,12 @@ public class UsuarioController {
     public ResponseEntity<Void> deletaPorEmail(@PathVariable String email){
         usuarioService.deletaUsuarioPorEmail(email);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping
+
+    public ResponseEntity<UsuarioDTO> atualizaDados(@RequestBody UsuarioDTO usuarioDTO,
+                                                    @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(usuarioService.atualizaUsuario(token, usuarioDTO));
     }
 }

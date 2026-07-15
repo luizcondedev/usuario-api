@@ -1,6 +1,8 @@
 package com.luizconde.usuario.controller;
 
 import com.luizconde.usuario.business.UsuarioService;
+import com.luizconde.usuario.business.dto.EnderecoDTO;
+import com.luizconde.usuario.business.dto.TelefoneDTO;
 import com.luizconde.usuario.business.dto.UsuarioDTO;
 import com.luizconde.usuario.infrastructure.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,8 @@ public class UsuarioController {
     @PostMapping("/login")
     public String login(@RequestBody UsuarioDTO usuarioDTO){
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(usuarioDTO.getEmail(),
+                new UsernamePasswordAuthenticationToken(
+                        usuarioDTO.getEmail(),
                         usuarioDTO.getSenha())
         );
         return "Bearer " + jwtUtil.generateToken(authentication.getName());
@@ -43,5 +46,23 @@ public class UsuarioController {
     public ResponseEntity<Void> deletaPorEmail(@PathVariable String email){
         usuarioService.deletaUsuarioPorEmail(email);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping
+    public ResponseEntity<UsuarioDTO> atualizaDados(@RequestBody UsuarioDTO usuarioDTO,
+                                                    @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(usuarioService.atualizaUsuario(token, usuarioDTO));
+    }
+
+    @PutMapping("/enderecos/{idEndereco}")
+    public ResponseEntity<EnderecoDTO> atualizaEndereco(@RequestBody EnderecoDTO enderecoDTO,
+                                                        @PathVariable Long idEndereco){
+        return ResponseEntity.ok(usuarioService.atualizaEndereco(idEndereco, enderecoDTO));
+    }
+
+    @PutMapping("/telefones/{idTelefone}")
+    public ResponseEntity<TelefoneDTO> atualizaTelefone(@RequestBody TelefoneDTO telefoneDTO,
+                                                        @PathVariable Long idTelefone){
+        return ResponseEntity.ok(usuarioService.atualizaTelefone(idTelefone, telefoneDTO));
     }
 }
